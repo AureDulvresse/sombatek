@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { Link } from '@inertiajs/vue3';
 import axios from 'axios';
 import type { Component } from 'vue';
-import { markRaw, ref } from 'vue';
+import { computed, markRaw, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 
 interface WishlistItem {
@@ -22,15 +22,12 @@ interface WishlistItem {
     stock: number;
 }
 
-defineProps<{
+const props = defineProps<{
     isOpen: boolean;
-    wishlists: WishlistItem[];
-    total: number;
 }>();
 
 const emit = defineEmits<{
     (e: 'close'): void;
-    (e: 'update'): void;
 }>();
 
 const toast = useToast();
@@ -39,6 +36,20 @@ const isAddingToCart = ref(false);
 const isClearing = ref(false);
 
 const wishlistStore = useWishlistStore();
+
+// Utiliser les données du store pour l'affichage
+const wishlistItems = computed(() => wishlistStore.items || []);
+const total = computed(() => wishlistStore.total || 0);
+
+// Ajouter un watcher pour la synchronisation
+watch(
+    () => props.isOpen,
+    async (newValue) => {
+        if (newValue) {
+            await wishlistStore.fetchWishlist(true);
+        }
+    },
+);
 
 const formatPrice = (price: number) => {
     if (isNaN(price) || price === null || price === undefined) {
@@ -59,6 +70,7 @@ const removeItem = async (itemId: number) => {
     try {
         await wishlistStore.removeItem(itemId);
         window.dispatchEvent(new CustomEvent('wishlist-updated'));
+        toast.success('Produit retiré des favoris');
     } catch (error: any) {
         toast.error(error.response?.data?.message || "Erreur lors de la suppression de l'article");
     } finally {
@@ -77,7 +89,7 @@ const addToCart = async (item: WishlistItem) => {
         });
 
         if (response.data.success) {
-            emit('update');
+            window.dispatchEvent(new CustomEvent('cart-updated'));
             toast.success('Produit ajouté au panier');
         }
     } catch (error: any) {
@@ -94,6 +106,7 @@ const clearWishlist = async () => {
     try {
         await wishlistStore.clear();
         window.dispatchEvent(new CustomEvent('wishlist-updated'));
+        toast.success('Liste de favoris vidée');
     } catch (error: any) {
         toast.error(error.response?.data?.message || 'Erreur lors de la suppression de la wishlist');
     } finally {
@@ -150,7 +163,7 @@ const TransitionRootComponent = markRaw(TransitionRoot);
                                         </div>
 
                                         <div class="mt-8">
-                                            <div v-if="wishlists.length === 0" class="text-center">
+                                            <div v-if="wishlistItems.length === 0" class="text-center">
                                                 <p class="text-gray-500 dark:text-gray-400">Votre liste de favoris est vide</p>
                                                 <Link
                                                     :href="route('products.index')"
@@ -162,7 +175,7 @@ const TransitionRootComponent = markRaw(TransitionRoot);
 
                                             <div v-else class="flow-root">
                                                 <ul role="list" class="-my-6 divide-y divide-gray-200 dark:divide-gray-700">
-                                                    <li v-for="item in wishlists" :key="item.id" class="flex py-6">
+                                                    <li v-for="item in wishlistItems" :key="item.id" class="flex py-6">
                                                         <div
                                                             class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 dark:border-gray-700"
                                                         >
@@ -210,7 +223,7 @@ const TransitionRootComponent = markRaw(TransitionRoot);
                                                                         <span v-else>Ajouter au panier</span>
                                                                     </button>
                                                                     <button
-                                                                        v-if="wishlists.length > 0"
+                                                                        v-if="wishlistItems.length > 0"
                                                                         @click="clearWishlist"
                                                                         :disabled="isClearing"
                                                                         class="rounded-lg bg-red-600 px-3 py-1 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"

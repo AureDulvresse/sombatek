@@ -8,7 +8,11 @@ interface WishlistItem {
     name: string;
     price: number;
     default_image: string;
-    options: Record<string, string>;
+    options?: any;
+    product?: {
+        stock: number;
+        is_active: boolean;
+    };
 }
 
 interface WishlistState {
@@ -18,6 +22,7 @@ interface WishlistState {
     isLoading: boolean;
     isInitialized: boolean;
     lastFetch: number | null;
+    error: string | null;
 }
 
 export const useWishlistStore = defineStore(
@@ -30,6 +35,7 @@ export const useWishlistStore = defineStore(
             isLoading: false,
             isInitialized: false,
             lastFetch: null,
+            error: null,
         });
 
         const shouldRefetch = computed(() => {
@@ -48,7 +54,9 @@ export const useWishlistStore = defineStore(
 
             try {
                 state.isLoading = true;
+                state.error = null;
                 const response = await axios.get(route('wishlist.get'));
+
                 if (response.data.success) {
                     state.items = response.data.wishlist.items || [];
                     state.items_count = response.data.wishlist.items_count || 0;
@@ -56,15 +64,15 @@ export const useWishlistStore = defineStore(
                     state.lastFetch = Date.now();
                     state.isInitialized = true;
                 } else {
-                    // En cas d'échec, on s'assure que les données sont dans un état valide
+                    state.error = response.data.message || 'Erreur lors de la récupération de la wishlist';
                     state.items = [];
                     state.items_count = 0;
                     state.total = 0;
                 }
                 return response.data.wishlist;
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Erreur lors de la récupération de la wishlist:', error);
-                // En cas d'erreur, on s'assure que les données sont dans un état valide
+                state.error = error.response?.data?.message || 'Erreur lors de la récupération de la wishlist';
                 state.items = [];
                 state.items_count = 0;
                 state.total = 0;
@@ -77,63 +85,73 @@ export const useWishlistStore = defineStore(
         async function toggleItem(productId: number) {
             try {
                 state.isLoading = true;
-                const response = await axios.post(route('wishlists.toggle-item'), { product_id: productId });
+                state.error = null;
+                const response = await axios.post(route('wishlist.toggle-item'), { product_id: productId });
 
                 if (response.data.success) {
-                    // Mettre à jour l'état local
-                    if (response.data.isInWishlist) {
-                        state.items.push(response.data.item);
-                    } else {
-                        state.items = state.items.filter((item) => item.product_id !== productId);
-                    }
-                    state.items_count = state.items.length;
-                    state.total = state.items.reduce((total, item) => total + item.price, 0);
-
-                    // Émettre l'événement de mise à jour
+                    await fetchWishlist(true); // Rafraîchir la wishlist complète
                     window.dispatchEvent(new CustomEvent('wishlist-updated'));
+                } else {
+                    state.error = response.data.message || 'Erreur lors de la modification de la wishlist';
                 }
 
                 return response.data;
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Erreur lors de la modification de la wishlist:', error);
+                state.error = error.response?.data?.message || 'Erreur lors de la modification de la wishlist';
                 throw error;
             } finally {
                 state.isLoading = false;
             }
         }
 
-        async function removeItem(itemId: number) {
+        async function removeItem(productId: number) {
             try {
                 state.isLoading = true;
-                const response = await axios.post(route('wishlists.remove-item'), { item_id: itemId });
+                state.error = null;
+                const response = await axios.post(route('wishlist.remove-item'), { product_id: productId });
 
                 if (response.data.success) {
-                    // Mettre à jour l'état local
-                    state.items = state.items.filter((item) => item.id !== itemId);
-                    state.items_count = state.items.length;
-                    state.total = state.items.reduce((total, item) => total + item.price, 0);
-
-                    // Émettre l'événement de mise à jour
+                    await fetchWishlist(true); // Rafraîchir la wishlist complète
                     window.dispatchEvent(new CustomEvent('wishlist-updated'));
+                } else {
+                    state.error = response.data.message || "Erreur lors de la suppression de l'article";
                 }
 
                 return response.data;
-            } catch (error) {
+            } catch (error: any) {
                 console.error("Erreur lors de la suppression de l'article:", error);
+                state.error = error.response?.data?.message || "Erreur lors de la suppression de l'article";
                 throw error;
             } finally {
                 state.isLoading = false;
             }
         }
 
-        function clear() {
-            state.items = [];
-            state.items_count = 0;
-            state.total = 0;
-            state.lastFetch = null;
+        async function clear() {
+            try {
+                state.isLoading = true;
+                state.error = null;
+                const response = await axios.post(route('wishlist.clear'));
 
-            // Émettre l'événement de mise à jour
-            window.dispatchEvent(new CustomEvent('wishlist-updated'));
+                if (response.data.success) {
+                    state.items = [];
+                    state.items_count = 0;
+                    state.total = 0;
+                    state.lastFetch = null;
+                    window.dispatchEvent(new CustomEvent('wishlist-updated'));
+                } else {
+                    state.error = response.data.message || 'Erreur lors de la suppression de la wishlist';
+                }
+
+                return response.data;
+            } catch (error: any) {
+                console.error('Erreur lors de la suppression de la wishlist:', error);
+                state.error = error.response?.data?.message || 'Erreur lors de la suppression de la wishlist';
+                throw error;
+            } finally {
+                state.isLoading = false;
+            }
         }
 
         return {
@@ -147,10 +165,6 @@ export const useWishlistStore = defineStore(
         };
     },
     {
-        persist: {
-            key: 'wishlist-store',
-            storage: localStorage,
-            paths: ['items', 'items_count', 'total', 'lastFetch'],
-        },
+        persist: true,
     },
 );

@@ -73,7 +73,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Liste de souhaits
         Route::prefix('wishlist')->group(function () {
-            Route::get('/', [WishlistController::class, 'index'])->name('wishlist.index');
             Route::get('/get', [WishlistController::class, 'get'])->name('wishlist.get');
             Route::post('/toggle-item', [WishlistController::class, 'toggleItem'])->name('wishlist.toggle-item');
             Route::post('/remove-item', [WishlistController::class, 'removeItem'])->name('wishlist.remove-item');
@@ -100,6 +99,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('/notifications', [ProfileController::class, 'updateNotifications'])->name('profile.notifications.update');
             Route::resource('addresses', AddressController::class);
         });
+
+        // Routes spécifiques aux clients
+        Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+        Route::post('/wishlist/move-to-cart', [WishlistController::class, 'moveToCart'])->name('wishlist.move-to-cart');
     });
 
     // =============================================

@@ -11,7 +11,13 @@ class CheckRole
    public function handle(Request $request, Closure $next, string $role): Response
    {
       if (!$request->user() || !$request->user()->hasRole($role)) {
-         abort(403, 'Accès non autorisé.');
+         if ($request->expectsJson()) {
+            return response()->json([
+               'success' => false,
+               'message' => 'Accès non autorisé'
+            ], 403);
+         }
+         return redirect()->route('home')->with('error', 'Accès non autorisé');
       }
 
       return $next($request);

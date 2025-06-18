@@ -191,9 +191,20 @@ class WishlistController extends Controller
     public function clear(): JsonResponse
     {
         try {
+            Log::info('Début de la méthode Wishlist::clear');
+
+            if (!Auth::check()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Utilisateur non connecté'
+                ], 401);
+            }
+
             $wishlist = Auth::user()->wishlists()->first();
+
             if ($wishlist) {
                 $wishlist->clear();
+                Log::info('Wishlist vidée avec succès', ['wishlist_id' => $wishlist->id]);
             }
 
             return response()->json([
@@ -201,7 +212,15 @@ class WishlistController extends Controller
                 'message' => 'Liste de souhaits vidée'
             ]);
         } catch (\Exception $e) {
-            return $this->getErrorResponse($e);
+            Log::error('Erreur Wishlist::clear: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue lors de la suppression de la wishlist'
+            ], 500);
         }
     }
 
@@ -293,6 +312,19 @@ class WishlistController extends Controller
         try {
             Log::info('Début de la méthode Wishlist::get');
 
+            // Vérifier si l'utilisateur est connecté
+            if (!Auth::check()) {
+                Log::info('Utilisateur non connecté');
+                return response()->json([
+                    'success' => true,
+                    'wishlist' => [
+                        'items' => [],
+                        'items_count' => 0,
+                        'total' => 0
+                    ]
+                ]);
+            }
+
             $wishlist = Auth::user()->wishlists()
                 ->with(['items' => function ($query) {
                     $query->with('product:id,name,stock,is_active');
@@ -302,14 +334,10 @@ class WishlistController extends Controller
             Log::info('Wishlist récupérée', ['wishlist_id' => $wishlist?->id]);
 
             if (!$wishlist) {
-                Log::info('Aucune wishlist trouvée, retour d\'une wishlist vide');
-                return response()->json([
-                    'success' => true,
-                    'wishlist' => [
-                        'items' => [],
-                        'items_count' => 0,
-                        'total' => 0
-                    ]
+                Log::info('Aucune wishlist trouvée, création d\'une nouvelle wishlist');
+                $wishlist = Auth::user()->wishlists()->create([
+                    'name' => 'Favoris',
+                    'is_public' => false
                 ]);
             }
 
@@ -343,7 +371,11 @@ class WishlistController extends Controller
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString()
             ]);
-            return $this->getErrorResponse($e);
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue lors de la récupération de la wishlist',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
