@@ -20,7 +20,7 @@ interface WishlistItem {
     product: Product;
 }
 
-const props = defineProps<{
+defineProps<{
     items: WishlistItem[];
     isFull: boolean;
 }>();
