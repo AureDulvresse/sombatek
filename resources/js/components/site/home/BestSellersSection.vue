@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import ProductCard from '../ProductCard.vue';
+import { Link } from '@inertiajs/vue3';
 
 interface Product {
     id: number;
@@ -149,15 +150,15 @@ const filteredProducts = computed(() => {
 
             <!-- Bouton Voir plus -->
             <div class="mt-12 text-center">
-                <a
-                    href="#"
+                <Link
+                    :href="route('products.index')"
                     class="inline-flex items-center rounded-lg border border-transparent bg-emerald-600 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-emerald-700"
                 >
                     Voir tous les meilleurs vendeurs
                     <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
-                </a>
+                </Link>
             </div>
         </div>
     </section>

@@ -113,6 +113,120 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Boutique : Ma boutique -->
+                    <div v-if="currentTab === 'shop' && user.role === 'shop'" class="rounded-lg bg-white p-6 shadow-sm">
+                        <h2 class="mb-6 text-xl font-bold">Ma boutique</h2>
+                        <div v-if="shop">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                                <div class="bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="text-xl font-bold">{{ shopStats.total_sales }}</div>
+                                    <div class="text-gray-500 text-xs">Ventes</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="text-xl font-bold">{{ shopStats.total_orders }}</div>
+                                    <div class="text-gray-500 text-xs">Commandes</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="text-xl font-bold">{{ shopStats.total_products }}</div>
+                                    <div class="text-gray-500 text-xs">Produits</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="text-xl font-bold">{{ shopStats.rating }} ★</div>
+                                    <div class="text-gray-500 text-xs">Note ({{ shopStats.review_count }} avis)</div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="font-semibold mb-2">Derniers produits</h3>
+                                    <ul>
+                                        <li v-for="product in shopProducts" :key="product.id" class="mb-1">
+                                            {{ product.name }} <span class="text-gray-400">- {{ product.price }} €</span>
+                                        </li>
+                                    </ul>
+                                    <div v-if="!shopProducts || !shopProducts.length" class="text-gray-400">Aucun produit récent.</div>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold mb-2">Dernières commandes</h3>
+                                    <ul>
+                                        <li v-for="order in shopOrders" :key="order.id" class="mb-1">
+                                            #{{ order.id }} - {{ order.total }} € - {{ order.status }}
+                                        </li>
+                                    </ul>
+                                    <div v-if="!shopOrders || !shopOrders.length" class="text-gray-400">Aucune commande récente.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <p>Aucune boutique associée.</p>
+                        </div>
+                    </div>
+                    <!-- Boutique : Produits -->
+                    <div v-if="currentTab === 'products' && user.role === 'shop'" class="rounded-lg bg-white p-6 shadow-sm">
+                        <h2 class="mb-6 text-xl font-bold">Mes produits</h2>
+                        <div v-if="shopProducts && shopProducts.length">
+                            <ul>
+                                <li v-for="product in shopProducts" :key="product.id">
+                                    {{ product.name }} - {{ product.price }} €
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-else>
+                            <p>Aucun produit trouvé.</p>
+                        </div>
+                    </div>
+                    <!-- Boutique : Commandes boutique -->
+                    <div v-if="currentTab === 'shopOrders' && user.role === 'shop'" class="rounded-lg bg-white p-6 shadow-sm">
+                        <h2 class="mb-6 text-xl font-bold">Commandes boutique</h2>
+                        <div v-if="shopOrders && shopOrders.length">
+                            <ul>
+                                <li v-for="order in shopOrders" :key="order.id">
+                                    Commande #{{ order.id }} - {{ order.total }} € - {{ order.status }}
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-else>
+                            <p>Aucune commande trouvée.</p>
+                        </div>
+                    </div>
+                    <!-- Boutique : Statistiques -->
+                    <div v-if="currentTab === 'shopStats' && user.role === 'shop'" class="rounded-lg bg-white p-6 shadow-sm">
+                        <h2 class="mb-6 text-xl font-bold">Statistiques</h2>
+                        <div v-if="shopStats">
+                            <p><strong>Total ventes :</strong> {{ shopStats.total_sales }}</p>
+                            <p><strong>Total commandes :</strong> {{ shopStats.total_orders }}</p>
+                            <p><strong>Total produits :</strong> {{ shopStats.total_products }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Promoteur : Commissions -->
+                    <div v-if="currentTab === 'commissions' && user.role === 'promoter'" class="rounded-lg bg-white p-6 shadow-sm">
+                        <h2 class="mb-6 text-xl font-bold">Mes commissions</h2>
+                        <div v-if="commissions && commissions.length">
+                            <ul>
+                                <li v-for="commission in commissions" :key="commission.id">
+                                    {{ commission.amount }} € - {{ commission.status }}
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-else>
+                            <p>Aucune commission trouvée.</p>
+                        </div>
+                    </div>
+                    <!-- Promoteur : Partenariats -->
+                    <div v-if="currentTab === 'partnerships' && user.role === 'promoter'" class="rounded-lg bg-white p-6 shadow-sm">
+                        <h2 class="mb-6 text-xl font-bold">Mes partenariats</h2>
+                        <div v-if="partnerships && partnerships.length">
+                            <ul>
+                                <li v-for="partnership in partnerships" :key="partnership.id">
+                                    {{ partnership.code }} - {{ partnership.status }}
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-else>
+                            <p>Aucun partenariat trouvé.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -121,7 +235,7 @@
 
 <script setup lang="ts">
 import { Link, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = defineProps<{
     user: {
@@ -129,29 +243,45 @@ const props = defineProps<{
         lastName: string;
         email: string;
         phone: string;
+        role: string;
     };
-    addresses: Array<{
-        id: number;
-        firstName: string;
-        lastName: string;
-        address: string;
-        postalCode: string;
-        city: string;
-        country: string;
-    }>;
-    orders: Array<{
-        id: number;
-        created_at: string;
-        total: number;
-        status: string;
-    }>;
+    addresses: Array<any>;
+    orders: Array<any>;
+    shop?: any;
+    shopProducts?: Array<any>;
+    shopOrders?: Array<any>;
+    shopStats?: any;
+    commissions?: Array<any>;
+    partnerships?: Array<any>;
 }>();
 
-const tabs = [
+const baseTabs = [
     { id: 'personal', name: 'Informations personnelles' },
     { id: 'addresses', name: 'Adresses' },
     { id: 'orders', name: 'Commandes' },
 ];
+
+const promoterTabs = [
+    { id: 'commissions', name: 'Mes commissions' },
+    { id: 'partnerships', name: 'Mes partenariats' },
+];
+
+const shopTabs = [
+    { id: 'shop', name: 'Ma boutique' },
+    { id: 'products', name: 'Mes produits' },
+    { id: 'shopOrders', name: 'Commandes boutique' },
+    { id: 'shopStats', name: 'Statistiques' },
+];
+
+const tabs = computed(() => {
+    if (props.user.role === 'shop') {
+        return baseTabs.concat(shopTabs);
+    } else if (props.user.role === 'promoter') {
+        return baseTabs.concat(promoterTabs);
+    } else {
+        return baseTabs;
+    }
+});
 
 const currentTab = ref('personal');
 const showAddressForm = ref(false);
@@ -161,6 +291,11 @@ const form = ref({
     lastName: props.user.lastName,
     email: props.user.email,
     phone: props.user.phone,
+    address: '',
+    postalCode: '',
+    city: '',
+    country: '',
+    id: null as number | null
 });
 
 const updateProfile = () => {
@@ -168,7 +303,20 @@ const updateProfile = () => {
 };
 
 const editAddress = (address: any) => {
-    // Logique pour éditer une adresse
+    // Ouvre le formulaire d'édition et pré-remplit les champs avec l'adresse sélectionnée
+    showAddressForm.value = true;
+    form.value = {
+        ...form.value,
+        firstName: address.firstName,
+        lastName: address.lastName,
+        email: form.value.email, // L'email reste celui de l'utilisateur
+        phone: form.value.phone, // Le téléphone reste celui de l'utilisateur
+        address: address.address,
+        postalCode: address.postalCode,
+        city: address.city,
+        country: address.country,
+        id: address.id,
+    };
 };
 
 const deleteAddress = (id: number) => {
