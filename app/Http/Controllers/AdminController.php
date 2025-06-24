@@ -61,8 +61,8 @@ class AdminController extends Controller
          $alerts[] = [
             'type' => 'warning',
             'message' => "{$stats['lowStockProducts']} produits en stock faible",
-            'action' => 'Voir les produits',
-            'link' => route('products.low-stock')
+            'action' => null,
+            'link' => null
          ];
       }
 

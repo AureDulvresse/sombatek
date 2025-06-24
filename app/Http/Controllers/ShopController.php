@@ -151,4 +151,12 @@ class ShopController extends Controller
       return redirect()->route('dashboard')
          ->with('success', 'Boutique supprimée avec succès.');
    }
+
+   public function pending()
+   {
+      $shops = Shop::where('status', 'pending')->with('user')->latest()->paginate(15);
+      return Inertia::render('Shops/Pending', [
+         'shops' => $shops
+      ]);
+   }
 }

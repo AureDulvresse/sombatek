@@ -7,9 +7,6 @@ use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Cart;
-use App\Models\Wishlist;
 use Illuminate\Support\Facades\Cache;
 
 class PageController extends Controller

@@ -95,6 +95,14 @@
                                         Politique des cookies
                                     </Link>
                                 </li>
+                                <li>
+                                    <Link
+                                        :href="route('legal')"
+                                        class="text-sm leading-6 text-gray-600 transition-colors hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400"
+                                    >
+                                        Mentions légales
+                                    </Link>
+                                </li>
                             </ul>
                         </div>
                         <div class="mt-10 md:mt-0">
