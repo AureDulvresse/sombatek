@@ -260,7 +260,7 @@ export default {
 
         <!-- Actual product card -->
         <div v-else
-            class="product-card relative w-full overflow-hidden rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-100/80 shadow-sm transition-all duration-500 ease-out hover:shadow-2xl hover:shadow-gray-900/10 hover:-translate-y-2 hover:border-gray-200/80 dark:bg-gray-800/90 dark:border-gray-700/80 dark:hover:border-gray-600/80"
+            class="group relative w-full overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-sm transition-all duration-500 ease-out hover:shadow-xl hover:shadow-gray-900/10 hover:-translate-y-1 hover:border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:hover:border-gray-600"
             :style="{ animationDelay: `${index * 100}ms` }" @mouseenter="isHovered = true"
             @mouseleave="isHovered = false">
             <!-- Success animation overlay -->
@@ -300,6 +300,23 @@ export default {
                 <!-- Gradient overlay on hover -->
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent transition-opacity duration-500"
                     :class="{ 'opacity-100': isHovered, 'opacity-0': !isHovered }" />
+
+                <!-- Premium badge -->
+                <div v-if="isPremiumProduct" class="absolute top-3 left-3 z-20">
+                    <div
+                        class="flex items-center gap-1 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
+                        <SparklesIcon class="h-3 w-3" />
+                        <span>Premium</span>
+                    </div>
+                </div>
+
+                <!-- Sale badge -->
+                <div v-if="product.isOnSale" class="absolute top-3 right-3 z-20">
+                    <div
+                        class="rounded-full bg-gradient-to-r from-red-500 to-pink-500 px-3 py-1.5 text-xs font-bold text-white shadow-lg animate-pulse">
+                        -{{ product.discount_percentage }}%
+                    </div>
+                </div>
 
                 <!-- Action buttons -->
                 <div class="absolute top-4 right-4 flex flex-col gap-2 transition-all duration-300"
@@ -341,10 +358,10 @@ export default {
             </div>
 
             <!-- Content -->
-            <div class="p-5">
+            <div class="p-6">
                 <!-- Rating and badges -->
-                <div class="mb-3 flex items-center justify-between">
-                    <div class="flex items-center gap-1">
+                <div class="mb-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
                         <div class="flex items-center">
                             <svg class="h-4 w-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path
@@ -354,17 +371,6 @@ export default {
                                 {{ Number(product.average_rating || 0).toFixed(1) }}
                             </span>
                         </div>
-                    </div>
-
-                    <!-- Premium badge -->
-                    <div v-if="isPremiumProduct" class="absolute top-3 left-3 z-20">
-                        <div
-                            class="flex items-center gap-1 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
-                            <SparklesIcon class="h-3 w-3" />
-                            <span>Premium</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2">
                         <span v-if="product.composite_score > 0.7"
                             class="rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
                             Populaire
@@ -373,20 +379,16 @@ export default {
                 </div>
 
                 <!-- Product name -->
-                <div class="h-20 line-clamp-2">
-                    <h3
-                        class="mb-3 line-clamp-2 text-lg font-semibold text-gray-900 transition-colors duration-300 group-hover:text-emerald-600 dark:text-gray-100 dark:group-hover:text-emerald-400">
-                        <Link :href="route('products.show', product.slug)" class="hover:underline">
+                <h3 class="mb-4 h-16 line-clamp-2 text-lg font-semibold text-gray-900 transition-colors duration-300 group-hover:text-emerald-600 dark:text-gray-100 dark:group-hover:text-emerald-400">
+                    <Link :href="route('products.show', product.slug)" class="hover:underline">
                         {{ product.name }}
-                        </Link>
-                    </h3>
-                </div>
+                    </Link>
+                </h3>
 
                 <!-- Price -->
                 <div class="mb-4">
-                    <div v-if="product.isOnSale && product.sale_price">
-
-                        <div class="flex items-baseline gap-2">
+                    <div v-if="product.isOnSale && product.sale_price" class="space-y-2">
+                        <div class="flex items-baseline gap-3">
                             <span class="text-2xl font-bold text-gray-900 dark:text-gray-100">
                                 {{ product.formatted_sale_price }}
                             </span>
@@ -394,13 +396,10 @@ export default {
                                 {{ product.formatted_price }}
                             </span>
                         </div>
-                        <!-- Sale badge -->
-                        <div
-                            class="w-14 rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-800 dark:bg-red-900 dark:text-red-300">
+                        <div class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-800 dark:bg-red-900 dark:text-red-300">
                             -{{ product.discount_percentage }}%
                         </div>
                     </div>
-
                     <div v-else>
                         <span class="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             {{ product.formatted_price }}
@@ -425,15 +424,18 @@ export default {
                             {{ product.shop?.name?.charAt(0) || '?' }}
                         </span>
                     </div>
-                    <div class="flex-1">
-                        <p class="font-medium text-gray-900 dark:text-gray-100 line-clamp-1">
-                            {{ product.shop?.name || 'Boutique inconnue' }}
-                        </p>
-                        <div v-if="product.shop?.is_verified"
-                            class="flex items-center gap-1 w-18 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300">
-                            <BadgeCheck class="h-3 w-3" />
-                            <span>Vérifié</span>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-1">
+                            <p class="font-medium text-gray-900 dark:text-gray-100 truncate">
+                                {{ product.shop?.name || 'Boutique inconnue' }}
+                            </p>
+                            <div v-if="product.shop?.is_verified"
+                                class="flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300 flex-shrink-0">
+                                <BadgeCheck class="h-3 w-3" />
+                                <span>Vérifié</span>
+                            </div>
                         </div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Vendeur professionnel</p>
                     </div>
                 </div>
 
