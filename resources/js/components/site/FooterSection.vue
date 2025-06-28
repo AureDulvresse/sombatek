@@ -233,7 +233,7 @@ const companyLinks = [
     { name: 'Qui sommes-nous', href: 'about' },
     { name: 'Carrières', href: 'careers' },
     { name: 'Partenaires', href: 'partners' },
-    { name: 'Presse', href: 'press' },
+    { name: 'Blog', href: 'blog' },
 ];
 
 const socialLinks = [
