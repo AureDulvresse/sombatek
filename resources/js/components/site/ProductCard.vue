@@ -6,11 +6,13 @@ import axios from 'axios';
 import { computed, onMounted, ref, watch } from 'vue';
 import { POSITION, useToast } from 'vue-toastification';
 import { useWishlistStore } from '../../stores/wishlist';
+import { Button } from '../ui/button';
 
 interface Product {
     id: number;
     name: string;
     slug: string;
+    description?: string;
     default_image: string;
     images: Array<{
         id: number;
@@ -252,7 +254,6 @@ export default {
 
         <!-- Actual product card -->
         <div
-            v-else
             class="relative w-full transform overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:bg-gray-800"
             :style="{ animationDelay: `${index * 150}ms` }"
             @mouseenter="isHovered = true"
@@ -395,7 +396,7 @@ export default {
                 </div>
 
                 <!-- Add to cart button -->
-                <button
+                <Button
                     @click="addToCart"
                     :disabled="isAddingToCart || product.stock <= 0"
                     class="mt-3 w-full transform rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-700 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:scale-105 hover:from-emerald-700 hover:to-emerald-800 disabled:cursor-not-allowed disabled:opacity-50"
@@ -490,6 +491,10 @@ export default {
                                 <div>
                                     <h2 class="mb-4 text-2xl font-bold text-gray-900 dark:text-gray-100">{{ product.name }}</h2>
 
+                                    <div class="text-xl font-medium text-foreground">
+                                        <p>{{ product.description ?? "" }}</p>
+                                    </div>
+
                                     <!-- Price -->
                                     <div class="mb-4">
                                         <div v-if="product.isOnSale && product.sale_price" class="flex items-center gap-2">
@@ -548,27 +553,27 @@ export default {
                                     <!-- Quantity selector -->
                                     <div class="flex items-center space-x-4">
                                         <div class="flex items-center space-x-2">
-                                            <button
+                                            <Button
                                                 @click="decrementQuantity"
                                                 :disabled="quantity <= 1 || product.stock <= 0"
                                                 class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 transition-all duration-300 hover:border-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                                             >
                                                 <span class="text-lg">-</span>
-                                            </button>
+                                            </Button>
                                             <span class="w-12 text-center text-lg font-medium text-gray-900 dark:text-gray-100">{{ quantity }}</span>
-                                            <button
+                                            <Button
                                                 @click="incrementQuantity"
                                                 :disabled="quantity >= product.stock"
                                                 class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 transition-all duration-300 hover:border-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                                             >
                                                 <span class="text-lg">+</span>
-                                            </button>
+                                            </Button>
                                         </div>
                                     </div>
 
                                     <!-- Buttons -->
                                     <div class="flex space-x-4">
-                                        <button
+                                        <Button
                                             @click="addToCart"
                                             :disabled="isAddingToCart || product.stock <= 0"
                                             class="flex-1 transform rounded-lg bg-emerald-600 px-6 py-3 font-medium text-white transition-all duration-300 hover:scale-105 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
@@ -594,13 +599,13 @@ export default {
                                             </span>
                                             <span v-else-if="product.stock <= 0">Rupture de stock</span>
                                             <span v-else>Ajouter au panier</span>
-                                        </button>
-                                        <button
+                                        </Button>
+                                        <Button
                                             @click="goToProductDetail"
                                             class="flex-1 transform rounded-lg border border-gray-200 bg-white px-6 py-3 font-medium text-gray-900 transition-all duration-300 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                                         >
                                             Voir les détails
-                                        </button>
+                                        </Button>
                                     </div>
                                 </div>
                             </div>

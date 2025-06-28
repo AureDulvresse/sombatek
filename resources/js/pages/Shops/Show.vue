@@ -351,10 +351,6 @@ const addToWishlist = (productId: number) => {
     router.post(route('wishlist.add', productId));
 };
 
-const toggleWishlist = () => {
-    router.post(route('shops.wishlist.toggle', props.shop.id));
-};
-
 const submitReview = () => {
     router.post(route('shops.reviews.store', props.shop.id), newReview.value, {
         onSuccess: () => {

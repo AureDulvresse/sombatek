@@ -4,7 +4,7 @@ import NavUser from '@/components/admin/sidebar/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { BookOpen, Folder, HelpCircle, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import NavFooter from './NavFooter.vue';
 
@@ -18,8 +18,8 @@ const pendingShops = typeof stats.pendingShops === 'number' ? stats.pendingShops
 if (user.role === 'admin') {
     mainNavItems = [
         { title: 'Dashboard', href: '/dashboard', icon: LayoutGrid },
-        { title: 'Utilisateurs', href: '/admin/users', icon: Folder },
-        { title: 'Boutiques', href: '/admin/shops', icon: Folder, badge: pendingShops },
+        { title: 'Utilisateurs', href: route('users.index'), icon: Folder },
+        { title: 'Boutiques', href: route('shops.index'), icon: Folder, badge: pendingShops },
         { title: 'Produits', href: '/admin/products', icon: Folder },
         { title: 'Commandes', href: '/admin/orders', icon: Folder },
         { title: 'Promotions', href: '/admin/promotions', icon: Folder },
@@ -48,26 +48,27 @@ if (user.role === 'admin') {
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
+        title: 'A Propos de sombatek',
         href: 'https://laravel.com/docs/starter-kits#vue',
         icon: BookOpen,
+    },
+    {
+        title: 'Centre d\'aide',
+        href: '/help',
+        icon: HelpCircle,
     },
 ];
 </script>
 
 <template>
-    <Sidebar collapsible="icon" variant="inset" class="bg-gradient-to-b from-blue-50 via-white to-green-50 min-h-screen">
+    <Sidebar collapsible="icon" variant="inset"
+        class="bg-gradient-to-b from-blue-50 via-white to-green-50 min-h-screen">
         <SidebarHeader>
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
                         <Link :href="route('dashboard')">
-                            <AppLogo />
+                        <AppLogo />
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
