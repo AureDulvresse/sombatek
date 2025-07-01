@@ -376,10 +376,10 @@ export default {
                 <div class="h-20 line-clamp-2">
                     <h3
                         class="mb-3 line-clamp-2 text-lg font-semibold text-gray-900 transition-colors duration-300 group-hover:text-emerald-600 dark:text-gray-100 dark:group-hover:text-emerald-400">
-                        <Link :href="route('products.show', product.slug)" class="hover:underline">
+                    <Link :href="route('products.show', product.slug)" class="hover:underline">
                         {{ product.name }}
-                        </Link>
-                    </h3>
+                    </Link>
+                </h3>
                 </div>
 
                 <!-- Price -->
@@ -387,13 +387,13 @@ export default {
                     <div v-if="product.isOnSale && product.sale_price">
 
                         <div class="flex items-baseline gap-2">
-                            <span class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                                {{ product.formatted_sale_price }}
-                            </span>
-                            <span class="text-lg text-gray-500 line-through dark:text-gray-400">
-                                {{ product.formatted_price }}
-                            </span>
-                        </div>
+                        <span class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                            {{ product.formatted_sale_price }}
+                        </span>
+                        <span class="text-lg text-gray-500 line-through dark:text-gray-400">
+                            {{ product.formatted_price }}
+                        </span>
+                    </div>
                         <!-- Sale badge -->
                         <div
                             class="w-14 rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-800 dark:bg-red-900 dark:text-red-300">
@@ -427,12 +427,12 @@ export default {
                     </div>
                     <div class="flex-1">
                         <p class="font-medium text-gray-900 dark:text-gray-100 line-clamp-1">
-                            {{ product.shop?.name || 'Boutique inconnue' }}
-                        </p>
+                                {{ product.shop?.name || 'Boutique inconnue' }}
+                            </p>
                         <div v-if="product.shop?.is_verified"
                             class="flex items-center gap-1 w-18 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300">
                             <BadgeCheck class="h-3 w-3" />
-                            <span>Vérifié</span>
+                                <span>Vérifié</span>
                         </div>
                     </div>
                 </div>

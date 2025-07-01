@@ -2,33 +2,33 @@
     <footer class="bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 border-t border-slate-700/50"
         aria-labelledby="footer-heading">
         <h2 id="footer-heading" class="sr-only">Footer</h2>
-
+        
         <!-- Main footer content -->
         <div class="mx-auto max-w-7xl px-6 pt-16 pb-8 sm:pt-24 lg:px-8 lg:pt-20">
             <div class="xl:grid xl:grid-cols-3 xl:gap-12">
                 <!-- Company info section -->
                 <div class="space-y-8 xl:col-span-1">
                     <Link :href="route('home')" class="inline-block group">
-                    <div class="transition-transform group-hover:scale-105">
-                        <AppLogo />
-                    </div>
+                        <div class="transition-transform group-hover:scale-105">
+                            <AppLogo />
+                        </div>
                     </Link>
-
+                    
                     <div class="space-y-4">
                         <p class="text-base leading-7 text-slate-300 max-w-md">
                             Votre plateforme de commerce en ligne de confiance, offrant une expérience d'achat
                             exceptionnelle avec les meilleurs produits et services.
                         </p>
-
+                        
                         <!-- Key features -->
                         <div class="flex flex-wrap gap-2">
                             <span v-for="feature in keyFeatures" :key="feature"
-                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                                 {{ feature }}
                             </span>
                         </div>
                     </div>
-
+                    
                     <!-- Contact info -->
                     <div class="space-y-3">
                         <div class="flex items-center space-x-3 text-slate-300">
@@ -46,7 +46,7 @@
                             <span class="text-sm">+242 06 123 45 67</span>
                         </div>
                     </div>
-
+                    
                     <!-- Social links -->
                     <div class="space-y-4">
                         <h4 class="text-sm font-semibold text-white">Suivez-nous</h4>
@@ -65,7 +65,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Links sections -->
                 <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0 lg:grid-cols-4">
                     <!-- Navigation -->
@@ -75,17 +75,17 @@
                             <li v-for="item in navigation" :key="item.name">
                                 <Link :href="route(item.href)"
                                     class="group text-sm text-slate-300 transition-colors duration-200 hover:text-emerald-400 flex items-center space-x-2">
-                                <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-emerald-400"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-emerald-400" 
+                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 5l7 7-7 7" />
-                                </svg>
-                                <span>{{ item.name }}</span>
+                                    </svg>
+                                    <span>{{ item.name }}</span>
                                 </Link>
                             </li>
                         </ul>
                     </div>
-
+                    
                     <!-- Support -->
                     <div class="space-y-6">
                         <h3 class="text-sm font-semibold text-white tracking-wider uppercase">Support</h3>
@@ -93,17 +93,17 @@
                             <li v-for="item in supportLinks" :key="item.name">
                                 <Link :href="route(item.href)"
                                     class="group text-sm text-slate-300 transition-colors duration-200 hover:text-emerald-400 flex items-center space-x-2">
-                                <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-emerald-400"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-emerald-400" 
+                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 5l7 7-7 7" />
-                                </svg>
-                                <span>{{ item.name }}</span>
+                                    </svg>
+                                    <span>{{ item.name }}</span>
                                 </Link>
                             </li>
                         </ul>
                     </div>
-
+                    
                     <!-- Legal -->
                     <div class="space-y-6">
                         <h3 class="text-sm font-semibold text-white tracking-wider uppercase">Légal</h3>
@@ -111,17 +111,17 @@
                             <li v-for="item in legalLinks" :key="item.name">
                                 <Link :href="route(item.href)"
                                     class="group text-sm text-slate-300 transition-colors duration-200 hover:text-emerald-400 flex items-center space-x-2">
-                                <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-emerald-400"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-emerald-400" 
+                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 5l7 7-7 7" />
-                                </svg>
-                                <span>{{ item.name }}</span>
+                                    </svg>
+                                    <span>{{ item.name }}</span>
                                 </Link>
                             </li>
                         </ul>
                     </div>
-
+                    
                     <!-- Company -->
                     <div class="space-y-6">
                         <h3 class="text-sm font-semibold text-white tracking-wider uppercase">Entreprise</h3>
@@ -129,19 +129,19 @@
                             <li v-for="item in companyLinks" :key="item.name">
                                 <Link :href="route(item.href)"
                                     class="group text-sm text-slate-300 transition-colors duration-200 hover:text-emerald-400 flex items-center space-x-2">
-                                <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-emerald-400"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-emerald-400" 
+                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 5l7 7-7 7" />
-                                </svg>
-                                <span>{{ item.name }}</span>
+                                    </svg>
+                                    <span>{{ item.name }}</span>
                                 </Link>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-
+            
             <!-- Newsletter subscription -->
             <div class="mt-16 pt-8 border-t border-slate-700/50">
                 <div class="max-w-md mx-auto xl:max-w-none xl:mx-0">
@@ -164,7 +164,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <!-- Bottom section -->
             <div class="mt-16 pt-8 border-t border-slate-700/50">
                 <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
@@ -178,7 +178,7 @@
                             <span>Version {{ appVersion }}</span>
                         </div>
                     </div>
-
+                    
                     <!-- Back to top button -->
                     <button @click="scrollToTop" type="button"
                         class="group p-2 rounded-lg bg-slate-800/50 text-slate-400 transition-all duration-300 hover:bg-emerald-500/10 hover:text-emerald-400 hover:scale-110"
@@ -277,7 +277,7 @@ const subscribeToNewsletter = () => {
         alert('Veuillez entrer une adresse email valide');
         return;
     }
-
+    
     // Here you would typically make an API call to subscribe the user
     console.log('Subscribing email:', emailSubscription.value);
     alert('Merci pour votre inscription à notre newsletter !');
