@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
 import ProductCard from '../ProductCard.vue';
+import { Link } from '@inertiajs/vue3';
 
 defineProps<{
     products: Array<any>;
@@ -13,7 +14,7 @@ const timeLeft = ref({
     seconds: 0,
 });
 
-let timer: NodeJS.Timeout;
+let timer: number;
 
 const updateTimer = () => {
     if (timeLeft.value.seconds > 0) {
@@ -87,15 +88,15 @@ onUnmounted(() => {
 
             <!-- Bouton Voir plus -->
             <div class="mt-12 text-center">
-                <a
-                    href="#"
+                <Link
+                    :href="route('products.index')"
                     class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-6 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-red-700"
                 >
                     Voir toutes les offres
                     <svg class="-mr-1 ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
-                </a>
+                </Link>
             </div>
         </div>
     </section>

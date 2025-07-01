@@ -150,6 +150,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('shops/{shop}/approve', [ShopController::class, 'approve'])->name('shops.approve');
         Route::post('shops/{shop}/reject', [ShopController::class, 'reject'])->name('shops.reject');
         Route::delete('shops/{shop}', [ShopController::class, 'destroy'])->name('shops.destroy');
+        Route::get('shops/pending', [ShopController::class, 'pending'])->name('shops.pending');
 
         // Gestion des catégories
         Route::resource('categories', CategoryController::class)->except(['show', 'destroy']);

@@ -236,11 +236,20 @@ onUnmounted(() => {
                                     <!-- Liens du menu -->
                                     <div class="py-1">
                                         <Link
+                                            v-if="page.props.auth.user.role === 'admin'"
+                                            :href="route('admin.dashboard')"
+                                            class="group mx-1 flex items-center rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-300 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+                                            @click="closeUserMenu"
+                                        >
+                                            Mon espace (Admin)
+                                        </Link>
+                                        <Link
+                                            v-else
                                             :href="route('profile.edit')"
                                             class="group mx-1 flex items-center rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-300 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
                                             @click="closeUserMenu"
                                         >
-                                            Mon Profil
+                                            Mon espace
                                         </Link>
 
                                         <Link
