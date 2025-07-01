@@ -48,4 +48,4 @@ class ReviewController extends Controller
 
         return back()->with('success', 'Avis supprimé avec succès.');
     }
-} 
+}
