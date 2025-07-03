@@ -240,4 +240,9 @@ class Shop extends Model
          default => ['text' => 'Inconnu', 'color' => 'text-gray-500'],
       };
    }
+
+   public function getRouteKeyName()
+   {
+      return 'slug';
+   }
 }

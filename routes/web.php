@@ -16,6 +16,7 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\AdvertisementController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\NotificationsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -186,6 +187,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/orders/{order}/verify', [PaymentController::class, 'verify'])->name('payment.verify');
     Route::post('/orders/{order}/confirm', [PaymentController::class, 'confirm'])->name('payment.confirm');
     Route::delete('/orders/{order}/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile/notifications', [NotificationsController::class, 'index'])->name('profile.notifications');
+    Route::put('/profile/notifications/{id}', [NotificationsController::class, 'markAsRead'])->name('profile.notifications.read');
+    Route::delete('/profile/notifications/{id}', [NotificationsController::class, 'destroy'])->name('profile.notifications.delete');
 });
 
 require __DIR__ . '/auth.php';

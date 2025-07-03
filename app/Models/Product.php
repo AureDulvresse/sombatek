@@ -75,7 +75,7 @@ class Product extends Model
 
    public function getFinalPriceAttribute(): float
    {
-      return $this->sale_price ?? $this->price;
+      return (float)($this->sale_price ?? $this->price);
    }
 
    public function getDiscountPercentageAttribute(): ?int
@@ -337,5 +337,10 @@ class Product extends Model
          return ['text' => 'Plus que ' . $this->stock . ' en stock', 'color' => 'text-orange-500'];
       }
       return ['text' => 'En stock', 'color' => 'text-green-500'];
+   }
+
+   public function getRouteKeyName()
+   {
+      return 'slug';
    }
 }

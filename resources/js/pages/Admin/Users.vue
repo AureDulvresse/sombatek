@@ -5,7 +5,8 @@ import { Card } from '@/components/ui/card';
 import { ref, computed } from 'vue';
 import { MoreVertical } from 'lucide-vue-next';
 
-defineProps<{ users: any }>();
+const props = defineProps<{ users: any }>();
+const users = props.users;
 const page = usePage();
 const user = page.props.auth.user;
 
@@ -95,6 +96,12 @@ const canToggle = (target: any) => {
                             </div>
                             <div class="text-sm text-gray-500">{{ u.email }}</div>
                             <div class="text-xs text-gray-400">Rôle : {{ u.role }}</div>
+                            <div v-if="u.role === 'shop' && u.shop">
+                                <Link :href="route('shops.show', u.shop.slug || u.shop.id)"
+                                    class="text-green-600 hover:underline ml-2" target="_blank">
+                                Voir la boutique
+                                </Link>
+                            </div>
                         </div>
                         <!-- Menu contextuel -->
                         <div class="ml-auto relative">
@@ -113,7 +120,7 @@ const canToggle = (target: any) => {
                                     </DropdownMenuItem>
                                     <DropdownMenuItem v-if="canToggle(u)" as-child>
                                         <button @click="handleToggle(u.id)">{{ u.is_active ? 'Désactiver' : 'Activer'
-                                            }}</button>
+                                        }}</button>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>

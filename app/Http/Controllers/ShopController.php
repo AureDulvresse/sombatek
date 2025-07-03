@@ -12,12 +12,6 @@ use Illuminate\Support\Str;
 
 class ShopController extends Controller
 {
-   public function __construct()
-   {
-      $this->middleware('auth')->except(['index', 'show']);
-      $this->middleware('role:admin')->only(['approve', 'reject', 'destroy']);
-   }
-
    public function index()
    {
       $shops = Shop::with(['user', 'products'])

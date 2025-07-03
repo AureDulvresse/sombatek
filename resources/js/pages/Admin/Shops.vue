@@ -5,7 +5,8 @@ import { Card } from '@/components/ui/card';
 import { ref, computed } from 'vue';
 import { MoreVertical } from 'lucide-vue-next';
 
-defineProps<{ shops: any }>();
+const props = defineProps<{ shops: any }>();
+const shops = props.shops;
 const page = usePage();
 const user = page.props.auth.user;
 
@@ -110,6 +111,10 @@ const canReject = (shop: any) => {
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>
+                        <Link :href="route('shops.show', s.slug || s.id)" class="text-green-600 hover:underline ml-2"
+                            target="_blank">
+                        Voir le profil public
+                        </Link>
                     </div>
                 </Card>
             </div>

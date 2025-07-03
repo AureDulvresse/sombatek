@@ -107,4 +107,9 @@ class Category extends Model
    {
       return $this->products()->whereNotNull('sale_price')->count();
    }
+
+   public function getRouteKeyName()
+   {
+      return 'slug';
+   }
 }

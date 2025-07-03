@@ -35,7 +35,7 @@ export default {
         <div class="p-6">
             <div class="mb-3 flex items-center justify-between">
                 <h3 class="text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-green-600">
-                    <Link :href="route('shops.show', shop.slug)">
+                    <Link :href="route('shops.profile', shop.slug || shop.id)">
                     {{ shop.name }}
                     </Link>
                 </h3>
@@ -47,7 +47,7 @@ export default {
 
             <p class="mb-4 text-gray-600">{{ shop.description }}</p>
 
-            <Link :href="route('shops.show', shop.slug)"
+            <Link :href="route('shops.profile', shop.slug || shop.id)"
                 class="inline-flex items-center font-semibold text-green-600 transition-colors duration-300 group-hover:text-green-700">
             Visiter la boutique
             <svg class="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none"
