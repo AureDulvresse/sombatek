@@ -1,47 +1,50 @@
 <template>
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
         <!-- En-tête de la boutique -->
-        <div class="bg-white">
-            <div class="container mx-auto px-4 py-8">
-                <div class="flex flex-col gap-6 md:flex-row md:items-center">
-                    <div class="flex-shrink-0">
-                        <img :src="shop.logo" :alt="shop.name" class="h-32 w-32 rounded-full object-cover" />
-                    </div>
-                    <div class="flex-1">
-                        <div class="mb-4 flex items-center justify-between">
-                            <h1 class="text-3xl font-bold flex items-center">
-                                {{ shop.name }}
-                                <span v-if="shop.is_verified"
-                                    class="ml-2 px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Vérifiée</span>
-                            </h1>
-                            <button class="rounded-lg border p-2 text-gray-600 hover:bg-gray-50">
+        <div class="bg-white/90 dark:bg-gray-800/90 shadow-sm rounded-b-3xl">
+            <div class="mx-auto max-w-5xl px-4 py-10 flex flex-col md:flex-row md:items-center gap-8">
+                <div class="flex-shrink-0">
+                    <img :src="shop.logo || '/images/shop-placeholder.jpg'" :alt="shop.name"
+                        class="h-32 w-32 rounded-2xl object-cover border-4 border-emerald-100 shadow-md" />
+                </div>
+                <div class="flex-1">
+                    <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                        <h1 class="text-3xl font-bold flex items-center text-gray-900 dark:text-white">
+                            {{ shop.name }}
+                            <span v-if="shop.is_verified"
+                                class="ml-2 px-2 py-1 text-xs bg-emerald-100 text-emerald-700 rounded-full">Vérifiée</span>
+                        </h1>
+                        <div class="flex items-center gap-2">
+                            <button
+                                class="rounded-lg border p-2 text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">
                                 <HeartIcon class="h-5 w-5" :class="{ 'fill-current text-red-500': isWishlisted }" />
                             </button>
+                            <a :href="`mailto:${shop.email}`"
+                                class="inline-block px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Contacter</a>
                         </div>
-                        <div class="mb-4 flex items-center gap-4">
-                            <div class="flex items-center">
-                                <StarIcon class="h-5 w-5 text-yellow-400" />
-                                <span class="ml-1">{{ shop.rating }}</span>
-                                <span class="ml-1 text-gray-600">({{ shop.reviews_count }} avis)</span>
-                            </div>
-                            <span class="text-gray-600">{{ shop.products_count }} produits</span>
-                            <span class="text-gray-600">Membre depuis {{ formatDate(shop.created_at) }}</span>
-                        </div>
-                        <p class="text-gray-600">{{ shop.description }}</p>
                     </div>
+                    <div class="mb-4 flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-300">
+                        <div class="flex items-center">
+                            <StarIcon class="h-5 w-5 text-yellow-400" />
+                            <span class="ml-1 font-semibold text-gray-900 dark:text-white">{{ shop.rating }}</span>
+                            <span class="ml-1">({{ shop.reviews_count }} avis)</span>
+                        </div>
+                        <span>{{ shop.products_count }} produits</span>
+                        <span>Membre depuis {{ formatDate(shop.created_at) }}</span>
+                    </div>
+                    <p class="text-gray-700 dark:text-gray-200 max-w-2xl">{{ shop.description }}</p>
                 </div>
             </div>
         </div>
 
         <!-- Navigation de la boutique -->
-        <div class="border-b bg-white">
-            <div class="container mx-auto px-4">
+        <div class="border-b bg-white/80 dark:bg-gray-800/80 sticky top-0 z-10 shadow-sm">
+            <div class="mx-auto max-w-5xl px-4">
                 <nav class="flex space-x-8">
                     <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" :class="[
-                        'border-b-2 py-4 text-sm font-medium',
+                        'border-b-2 py-4 text-sm font-medium transition',
                         activeTab === tab.id
-                            ? 'border-primary text-primary'
-                            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                            ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200',
                     ]">
                         {{ tab.name }}
                     </button>
@@ -49,19 +52,21 @@
             </div>
         </div>
 
-        <div class="container mx-auto px-4 py-8">
+        <div class="mx-auto max-w-5xl px-4 py-10">
             <!-- Onglet Produits -->
             <div v-if="activeTab === 'products'" class="space-y-8">
                 <!-- Filtres -->
-                <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
                     <div class="flex items-center gap-4">
-                        <select v-model="sortBy" class="rounded-lg border p-2">
+                        <select v-model="sortBy"
+                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100">
                             <option value="newest">Plus récents</option>
                             <option value="price_asc">Prix croissant</option>
                             <option value="price_desc">Prix décroissant</option>
                             <option value="rating">Meilleures notes</option>
                         </select>
-                        <select v-model="categoryFilter" class="rounded-lg border p-2">
+                        <select v-model="categoryFilter"
+                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100">
                             <option value="">Toutes les catégories</option>
                             <option v-for="category in categories" :key="category.id" :value="category.id">
                                 {{ category.name }}
@@ -70,11 +75,11 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button @click="viewMode = 'grid'"
-                            :class="['p-2', viewMode === 'grid' ? 'text-primary' : 'text-gray-400']">
+                            :class="['p-2 rounded-lg', viewMode === 'grid' ? 'bg-emerald-100 text-emerald-700' : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700']">
                             <Squares2X2Icon class="h-5 w-5" />
                         </button>
                         <button @click="viewMode = 'list'"
-                            :class="['p-2', viewMode === 'list' ? 'text-primary' : 'text-gray-400']">
+                            :class="['p-2 rounded-lg', viewMode === 'list' ? 'bg-emerald-100 text-emerald-700' : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700']">
                             <ListBulletIcon class="h-5 w-5" />
                         </button>
                     </div>
@@ -82,77 +87,23 @@
 
                 <!-- Grille des produits -->
                 <div
-                    :class="['grid gap-6', viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1']">
-                    <div v-for="product in filteredProducts" :key="product.id"
-                        :class="['group rounded-lg bg-white p-4 shadow-sm transition-shadow hover:shadow-md', viewMode === 'list' && 'flex gap-4']">
-                        <div
-                            :class="['relative overflow-hidden rounded-lg', viewMode === 'list' ? 'h-32 w-32 flex-shrink-0' : 'mb-4']">
-                            <img :src="product.image" :alt="product.name"
-                                class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" />
-                            <div class="absolute top-2 right-2">
-                                <button class="rounded-full bg-white p-2 text-gray-600 hover:text-primary">
-                                    <HeartIcon class="h-5 w-5" />
-                                </button>
-                            </div>
-                        </div>
-                        <div :class="[viewMode === 'list' && 'flex-1']">
-                            <h3 class="mb-2 text-lg font-medium">{{ product.name }}</h3>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="text-lg font-bold text-primary">{{ product.price }} €</span>
-                                    <span v-if="product.oldPrice" class="ml-2 text-sm text-gray-500 line-through"> {{
-                                        product.oldPrice }} € </span>
-                                </div>
-                                <div class="flex items-center">
-                                    <StarIcon class="h-4 w-4 text-yellow-400" />
-                                    <span class="ml-1 text-sm">{{ product.rating }}</span>
-                                </div>
-                            </div>
-                            <div class="mt-4 flex items-center justify-between">
-                                <button @click="addToCart(product)"
-                                    class="hover:bg-primary-dark rounded-lg bg-primary px-4 py-2 text-white">
-                                    Ajouter au panier
-                                </button>
-                                <div class="flex gap-2">
-                                    <button @click="addToWishlist(product.id)"
-                                        class="rounded-lg border p-2 text-gray-600 hover:text-red-500">
-                                        <HeartIcon class="h-5 w-5" />
-                                    </button>
-                                    <button @click="navigateToProduct(product.id)"
-                                        class="hover:text-primary-dark text-primary">Voir détails</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pagination -->
-                <div class="flex justify-center">
-                    <nav class="flex items-center gap-2">
-                        <button class="rounded-lg border p-2 hover:bg-gray-50">
-                            <ChevronLeftIcon class="h-5 w-5" />
-                        </button>
-                        <button v-for="page in 5" :key="page"
-                            :class="['rounded-lg px-4 py-2', page === currentPage ? 'bg-primary text-white' : 'hover:bg-gray-50']">
-                            {{ page }}
-                        </button>
-                        <button class="rounded-lg border p-2 hover:bg-gray-50">
-                            <ChevronRightIcon class="h-5 w-5" />
-                        </button>
-                    </nav>
+                    :class="[viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-6']">
+                    <ProductCard v-for="(product, idx) in filteredProducts" :key="product.id" :product="product"
+                        :index="idx" />
                 </div>
             </div>
 
             <!-- Onglet À propos -->
             <div v-if="activeTab === 'about'" class="space-y-8">
-                <div class="rounded-lg bg-white p-6 shadow-sm">
-                    <h2 class="mb-4 text-xl font-bold">À propos de la boutique</h2>
-                    <p class="text-gray-600">{{ shop.description }}</p>
+                <div class="rounded-2xl bg-white/90 dark:bg-gray-800/90 p-6 shadow-sm">
+                    <h2 class="mb-4 text-xl font-bold text-emerald-700 dark:text-emerald-400">À propos de la boutique
+                    </h2>
+                    <p class="text-gray-700 dark:text-gray-200">{{ shop.description }}</p>
                 </div>
 
-                <div class="rounded-lg bg-white p-6 shadow-sm">
-                    <h2 class="mb-4 text-xl font-bold">Informations</h2>
-                    <div class="space-y-4">
+                <div class="rounded-2xl bg-white/90 dark:bg-gray-800/90 p-6 shadow-sm">
+                    <h2 class="mb-4 text-xl font-bold text-emerald-700 dark:text-emerald-400">Informations</h2>
+                    <div class="space-y-4 text-gray-700 dark:text-gray-200">
                         <div class="flex items-center">
                             <MapPinIcon class="h-5 w-5 text-gray-400" />
                             <span class="ml-2">{{ shop.address }}</span>
@@ -168,8 +119,8 @@
                     </div>
                 </div>
 
-                <div class="rounded-lg bg-white p-6 shadow-sm">
-                    <h2 class="mb-4 text-xl font-bold">Horaires d'ouverture</h2>
+                <div class="rounded-2xl bg-white/90 dark:bg-gray-800/90 p-6 shadow-sm">
+                    <h2 class="mb-4 text-xl font-bold text-emerald-700 dark:text-emerald-400">Horaires d'ouverture</h2>
                     <div class="space-y-2">
                         <div v-for="(hours, day) in shop.openingHours" :key="day" class="flex justify-between">
                             <span class="font-medium">{{ day }}</span>
@@ -184,33 +135,28 @@
                         {{ link.platform }}
                     </a>
                 </div>
-
-                <a :href="`mailto:${shop.email}`"
-                    class="inline-block mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark">
-                    Contacter la boutique
-                </a>
             </div>
 
             <!-- Onglet Avis -->
             <div v-if="activeTab === 'reviews'" class="space-y-8">
-                <div class="rounded-lg bg-white p-6 shadow-sm">
+                <div class="rounded-2xl bg-white/90 dark:bg-gray-800/90 p-6 shadow-sm">
                     <div class="mb-6 flex items-center justify-between">
                         <div>
-                            <h2 class="text-xl font-bold">Avis clients</h2>
+                            <h2 class="text-xl font-bold text-emerald-700 dark:text-emerald-400">Avis clients</h2>
                             <div class="mt-1 flex items-center">
                                 <StarIcon class="h-5 w-5 text-yellow-400" />
-                                <span class="ml-1">{{ shop.rating }}</span>
+                                <span class="ml-1 font-semibold text-gray-900 dark:text-white">{{ shop.rating }}</span>
                                 <span class="ml-1 text-gray-600">({{ shop.reviews_count }} avis)</span>
                             </div>
                         </div>
                         <button @click="showReviewForm = true"
-                            class="hover:bg-primary-dark rounded-lg bg-primary px-4 py-2 text-white">
+                            class="hover:bg-emerald-700 rounded-lg bg-emerald-600 px-4 py-2 text-white transition">
                             Écrire un avis
                         </button>
                     </div>
 
                     <!-- Formulaire d'avis -->
-                    <div v-if="showReviewForm" class="mb-6 rounded-lg border p-4">
+                    <div v-if="showReviewForm" class="mb-6 rounded-lg border p-4 bg-white dark:bg-gray-900">
                         <h3 class="mb-4 text-lg font-medium">Votre avis</h3>
                         <form @submit.prevent="submitReview" class="space-y-4">
                             <div>
@@ -229,11 +175,11 @@
                             </div>
                             <div class="flex justify-end gap-4">
                                 <button type="button" @click="showReviewForm = false"
-                                    class="rounded-lg border px-4 py-2 hover:bg-gray-50">
+                                    class="rounded-lg border px-4 py-2 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800">
                                     Annuler
                                 </button>
                                 <button type="submit"
-                                    class="hover:bg-primary-dark rounded-lg bg-primary px-4 py-2 text-white">Publier</button>
+                                    class="hover:bg-emerald-700 rounded-lg bg-emerald-600 px-4 py-2 text-white transition">Publier</button>
                             </div>
                         </form>
                     </div>
@@ -257,29 +203,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <p class="text-gray-600">{{ review.comment }}</p>
+                            <p class="text-gray-600 dark:text-gray-300">{{ review.comment }}</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Statut visible pour admin/proprio -->
-        <div v-if="userIsOwnerOrAdmin" class="mt-2">
-            <span class="text-xs px-2 py-1 rounded-full" :class="{
-                'bg-green-100 text-green-700': shop.status === 'active',
-                'bg-yellow-100 text-yellow-700': shop.status === 'pending',
-                'bg-red-100 text-red-700': shop.status === 'rejected'
-            }">
-                {{ shop.status }}
-            </span>
+            <!-- Statut visible pour admin/proprio -->
+            <div v-if="userIsOwnerOrAdmin" class="mt-6">
+                <span class="text-xs px-2 py-1 rounded-full" :class="{
+                    'bg-emerald-100 text-emerald-700': shop.status === 'active',
+                    'bg-yellow-100 text-yellow-700': shop.status === 'pending',
+                    'bg-red-100 text-red-700': shop.status === 'rejected'
+                }">
+                    {{ shop.status }}
+                </span>
+                <!-- Bouton gérer la boutique pour le propriétaire -->
+                <Link v-if="userIsOwner" :href="route('shops.edit', shop.slug)"
+                    class="ml-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white">
+                Gérer la boutique
+                </Link>
+            </div>
         </div>
-
-        <!-- Bouton gérer la boutique pour le propriétaire -->
-        <Link v-if="userIsOwner" :href="route('shops.edit', shop.slug)"
-            class="ml-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
-        Gérer la boutique
-        </Link>
     </div>
 </template>
 
