@@ -76,8 +76,17 @@ class ShopController extends Controller
          $query->where('is_active', true);
       }]);
 
+      // Récupère les catégories des produits de la boutique
+      $categories = $shop->products->pluck('category')->unique('id')->values();
+
+      // Récupère les avis (à adapter selon ta structure)
+      $reviews = $shop->reviews ?? [];
+
       return Inertia::render('Shops/Show', [
-         'shop' => $shop
+         'shop' => $shop,
+         'products' => $shop->products,
+         'categories' => $categories,
+         'reviews' => $reviews,
       ]);
    }
 
