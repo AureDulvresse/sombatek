@@ -84,4 +84,45 @@ class OrderController extends Controller
 
       return back()->with('error', 'Cette commande ne peut pas être annulée.');
    }
+
+   public function shopIndex()
+   {
+      $shop = Auth::user()->shop;
+      if (!$shop) {
+         abort(403, 'Aucune boutique associée à ce compte.');
+      }
+      $orders = Order::where('shop_id', $shop->id)
+         ->with(['items.product', 'customer', 'address'])
+         ->latest()
+         ->paginate(10);
+      return Inertia::render('Shop/Orders', [
+         'orders' => $orders
+      ]);
+   }
+
+   public function shopShow(Order $order)
+   {
+      $shop = Auth::user()->shop;
+      if (!$shop || $order->shop_id !== $shop->id) {
+         abort(403, 'Accès non autorisé à cette commande.');
+      }
+      $order->load(['items.product', 'customer', 'address']);
+      return Inertia::render('Shop/OrderDetail', [
+         'order' => $order
+      ]);
+   }
+
+   public function updateStatus(Request $request, Order $order)
+   {
+      $shop = Auth::user()->shop;
+      if (!$shop || $order->shop_id !== $shop->id) {
+         abort(403, 'Accès non autorisé à cette commande.');
+      }
+      $validated = $request->validate([
+         'status' => 'required|string|in:en attente,en cours,livrée,annulée'
+      ]);
+      $order->update(['status' => $validated['status']]);
+      // (Optionnel) Ajouter une notification au client ici
+      return back()->with('success', 'Statut de la commande mis à jour.');
+   }
 }
