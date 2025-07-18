@@ -108,6 +108,10 @@ sombatek/
 
 ## Licence
 
-Ce projet est **propriétaire** et est la propriété exclusive de **Sombatek**.
-Il **n'est pas open-source** et **ne peut être ni copié, ni redistribué, ni modifié** sans autorisation écrite préalable.
+Ce projet est une propriété exclusive de SOMBATEK, édité par la société ONDRIS Tech.
+
+Il n'est pas open-source.
+Aucune reproduction, distribution ou modification n’est autorisée sans autorisation écrite préalable.
 Tous droits réservés © Sombatek.
+
+Consultez le fichier LICENSE pour plus de détails.
