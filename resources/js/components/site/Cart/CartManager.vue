@@ -31,7 +31,7 @@ interface Cart {
     promotion_discount: number;
 }
 
-const props = defineProps<{
+defineProps<{
     cart: Cart;
 }>();
 
@@ -39,10 +39,17 @@ const toast = useToast();
 const isUpdating = ref(false);
 const isRemoving = ref(false);
 
-const form = useForm({
+useForm({
     quantity: 1,
 });
 
+/**
+ * Met à jour la quantité d'un article dans le panier.
+ *
+ * @param {number} itemId - L'ID de l'article.
+ * @param {number} quantity - La nouvelle quantité.
+ * @returns {Promise<void>}
+ */
 const updateQuantity = async (itemId: number, quantity: number) => {
     if (isUpdating.value) return;
     isUpdating.value = true;
@@ -86,10 +93,12 @@ const clearCart = async () => {
 };
 
 const handlePromotionApplied = (code: string) => {
+    toast.success(`Code promo "${code}" appliqué avec succès`);
     window.location.reload();
 };
 
 const handlePromotionRemoved = () => {
+    toast.success(`Code promo supprimé avec succès`);
     window.location.reload();
 };
 </script>

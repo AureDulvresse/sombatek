@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 // Les produits sont passés en props via Inertia
 const props = defineProps<{ products: any[] }>();
 const products = ref(props.products);
-const user = usePage().props.auth.user;
+// const user = usePage().props.auth.user;
 
 const handleDelete = (id: number) => {
     if (confirm('Supprimer ce produit ?')) {
