@@ -1,3 +1,3 @@
 declare module 'vue' {
-    export * from '@vue';
+    export * from '@vue/runtime-core';
 }

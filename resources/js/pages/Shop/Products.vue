@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
+
 // Les produits sont passés en props via Inertia
 const props = defineProps<{ products: any[] }>();
 const products = ref(props.products);
