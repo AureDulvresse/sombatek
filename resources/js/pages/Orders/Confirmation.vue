@@ -93,7 +93,7 @@
                 <Link :href="route('orders.show', order.id)" class="hover:bg-primary-dark inline-block rounded-lg bg-primary px-6 py-3 text-white">
                     Suivre ma commande
                 </Link>
-            </div>
+             </div>
         </div>
     </div>
 </template>
