@@ -166,14 +166,14 @@
     </div>
 </template>
 
-<script setup>
-import Modal from '@/components/Modal.vue';
-import Pagination from '@/components/Pagination.vue';
+<script setup lang="ts">
+// import Modal from '@/components/Modal.vue';
+// import Pagination from '@/components/Pagination.vue';
 import { CalendarIcon, ClockIcon, MapPinIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/vue/24/outline';
-import { useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
-const props = defineProps({
+defineProps({
     subscriptions: Object,
     products: Array,
     addresses: Array,
@@ -195,7 +195,7 @@ const minStartDate = computed(() => {
     return tomorrow.toISOString().split('T')[0];
 });
 
-const formatDate = (date) => {
+const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('fr-FR', {
         day: 'numeric',
         month: 'long',
@@ -212,11 +212,12 @@ const createSubscription = () => {
     });
 };
 
-const editSubscription = (subscription) => {
-    // Implémenter la logique d'édition
-};
+// TODO - Implement edit functionality
+// const editSubscription = (subscription : any) => {
+//     // Implémenter la logique d'édition
+// };
 
-const cancelSubscription = (subscription) => {
+const cancelSubscription = (subscription: any) => {
     if (confirm('Êtes-vous sûr de vouloir annuler cet abonnement ?')) {
         router.delete(route('subscriptions.destroy', subscription.id));
     }

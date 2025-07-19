@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import { useToast } from 'vue-toastification';
 import axios from 'axios';
 
-const props = defineProps<{
+defineProps<{
     promotionCode: string | null;
     promotionDiscount: number;
 }>();

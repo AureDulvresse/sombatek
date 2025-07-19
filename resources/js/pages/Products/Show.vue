@@ -26,6 +26,8 @@
                         <div class="rounded-2xl bg-white p-8 shadow-sm transition-all duration-300 hover:shadow-lg dark:bg-gray-800">
                             <h1 class="mb-4 text-3xl font-bold text-gray-900 dark:text-white">{{ product.name }}</h1>
 
+                            <p class="mb-4 text-gray-600 dark:text-gray-400">{{ product.description }}</p>
+
                             <!-- Prix et réduction -->
                             <div class="mb-6">
                                 <div v-if="product.isOnSale" class="flex items-center gap-3">
@@ -259,7 +261,7 @@ const canAddToCart = computed(() => {
     if (!props.product.variations) return true;
 
     // Vérifier si toutes les variantes requises sont sélectionnées
-    return props.product.variations.every((variation) => selectedVariations.value[variation.name] !== undefined);
+    return props.product.variations.every((variation : Variation) => selectedVariations.value[variation.name] !== undefined);
 });
 
 const addToCart = (product: Product) => {
@@ -278,14 +280,6 @@ const buyNow = () => {
 
 const addToWishlist = () => {
     router.post(route('wishlist.add', props.product.id));
-};
-
-const navigateToShop = (shopId: number) => {
-    router.visit(route('shops.show', shopId));
-};
-
-const navigateToCategory = (categoryId: number) => {
-    router.visit(route('products.index', { category: categoryId }));
 };
 
 const navigateToProduct = (productId: number) => {

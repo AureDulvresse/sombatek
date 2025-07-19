@@ -13,6 +13,11 @@ const handleStatus = (orderId: number, status: string) => {
         router.post(route('shop.orders.update-status', orderId), { status });
     }
 };
+
+if (!user || !user.role || user.role !== 'admin') {
+    router.visit(route('home'));
+}
+
 </script>
 
 <template>
@@ -59,4 +64,4 @@ const handleStatus = (orderId: number, status: string) => {
             </div>
         </div>
     </AppLayout>
-</template> 
+</template>
