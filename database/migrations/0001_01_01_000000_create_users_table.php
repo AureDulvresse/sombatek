@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -19,8 +21,9 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
 
-            // Fields added
+            // Champs supplémentaires
             $table->enum('role', ['admin', 'shop', 'promoter', 'customer'])->default('customer');
+            $table->boolean('root')->default(false); // 👈 Ajout du champ root
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->string('city')->nullable();
@@ -52,6 +55,18 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        // ✅ Insertion du super admin
+        DB::table('users')->insert([
+            'name' => 'Admin Root',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'), // ⚠️ change ce mot de passe
+            'role' => 'admin',
+            'root' => true,
+            'is_active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     /**
